@@ -6,7 +6,7 @@
 
 int
 backtrace(struct proc* curproc)
-
+{
   struct trapframe* tf = curproc->tf;
   uint32_t ebp = tf->ebp;
   uint32_t arg0, arg1, arg2, arg3, arg4;
@@ -30,17 +30,15 @@ backtrace(struct proc* curproc)
   }
   return 0;
   
-
-{
 }
-int
-main(int argc, char *argv[])
-{
-  struct proc* curproc = myproc();
+//int
+//main(int argc, char *argv[])
+//{
+//  struct proc* curproc = myproc();
   
-  if(curproc != NULL){
-    backtrace();
-  }
+//  if(curproc != NULL){
+//    backtrace();
+//  }
 
-  exit();
-}
+//  exit();
+//}

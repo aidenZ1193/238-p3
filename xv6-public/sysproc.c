@@ -88,4 +88,12 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+
+}
+
+int
+sys_backtrace(void)
+{
+  backtrace(myproc());
+  return 0;
 }
