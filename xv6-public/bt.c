@@ -31,14 +31,16 @@ backtrace(struct proc* curproc)
   return 0;
   
 }
-//int
-//main(int argc, char *argv[])
-//{
-//  struct proc* curproc = myproc();
-  
-//  if(curproc != NULL){
-//    backtrace();
-//  }
 
-//  exit();
-//}
+int
+main(int argc, char *argv[])
+{
+  struct proc* curproc = myproc();
+  
+  if(curproc != NULL){
+    backtrace(curproc);
+  }
+
+  exit();
+}
+
