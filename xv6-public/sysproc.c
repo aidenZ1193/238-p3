@@ -99,9 +99,9 @@ sys_backtrace(void)
   struct proc* curproc = myproc();
   //backtrace(p);
   //return 0;
+  /*
   struct trapframe* tf = curproc->tf;
   uint ebp = tf->ebp;
- // uint arg0, arg1, arg2, arg3, arg4;
   while(ebp){
 
    uint eax = tf->eax;
@@ -120,5 +120,7 @@ sys_backtrace(void)
    cprintf("return addr: %x\n", *(uint*)(old_ebp+4));
    cprintf("#0: %x\n#1:%x\n#2: %x\n#3: %x\n#4: %x\n",*(uint*)(old_ebp+8),*(uint*)(old_ebp+12), *(uint*)(old_ebp+16),*(uint*)(old_ebp+20), *(uint*)(old_ebp+24));
   }
+  */
+  backtrace(curproc);
   return 0;
 }
