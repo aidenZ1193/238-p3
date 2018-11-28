@@ -124,3 +124,61 @@ sys_backtrace(void)
   backtrace();
   return 0;
 }
+
+int
+sys_getprocinfo()
+{
+  // iterate through the process table, get info for each process
+  //struct uproc *up = malloc(sizeof(struct proc));
+
+   int pid = 0;
+   struct uproc* up;
+   
+   if(argint(0, &pid) < 0 || argptr(1, &up, sizeof(struct uproc)) < 0){
+      return -1;
+   }
+   getprocinfo(pid, (struct uproc*)up);
+
+   /*
+   //process name, process id, parent process id, size of process memory, process state, whether process is waiting on a channel, and whether it's been killed
+   cprintf("Process name        PID     ParentID    Size        Killed      State");
+   for(i = 0; i < 64; i++){
+    if(getprocinfo(i, up) == 0){
+      cprintf("%s\t %d\t %d\t %d\t %d\t",up->name, up->pid, up->parent_pid, up->sz, up->killed);
+      switch(up->state){
+        case UNUSED:
+         cprintf("UNUSED\t");
+         break;
+        case EMBRYO:
+         cprintf("EMBRYO\t");
+         break;
+        case SLEEPING:
+         cprintf("SLEEPING\t");
+         break;
+        case RUNNABLE:
+         cprintf("RUNNABLE\t");
+         break;
+        case RUNNING:
+         cprintf("RUNNING\t");
+         break;
+        case ZOMBIE:
+         cprintf("ZOMBIE\t");
+         break;
+     }
+    }
+  }  */
+  return 0;
+}
+/*
+int
+sys_getpids()
+{i
+  int[64] pids;
+  struct proc* p = ptable.proc;
+  for(int i = 0; i < NPROC && p<ptable.proc[NPROC]; i++){
+    pids[i] = proc->pid;
+    p++;
+  }
+  return pids;
+}
+*/

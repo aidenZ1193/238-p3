@@ -601,3 +601,39 @@ backtrace()
 
 
 }
+
+int
+getprocinfo(int proc_num, struct uproc *up)
+{
+  struct proc* p;
+ 
+  acquire(&ptable.lock);
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+   
+    if(p->pid == proc_num){
+      up->sz = p->sz;
+      up->pid = p->pid;
+      safestrcpy(up->name, p->name, sizeof(p->name));
+      up->killed = p->killed;
+      up->chan = p->chan;
+      up->state = p->state;
+
+      // check if parent exists
+      if(p->parent != 0)
+        up->parent_pid = p->parent->pid;
+      else
+        up->parent_pid = 0;      
+      
+
+      release(&ptable.lock);
+      // if successfully found process, return 0
+      return 0;
+    }
+
+  }  
+  release(&ptable.lock);
+  return -1;
+
+}
+

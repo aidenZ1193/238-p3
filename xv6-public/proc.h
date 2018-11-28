@@ -57,3 +57,20 @@ struct proc {
 //   original data and bss
 //   fixed-size stack
 //   expandable heap
+//
+
+// struct for getprocinfo
+struct uproc{
+  uint sz;		// size of process memory
+  int pid;		// Process iD
+  char name[16];	// Process name
+  enum procstate state;	// Process states
+  void* chan;		// If non-zero, sleeping on chan
+  int killed;		// If non-zero, have been killed
+  int parent_pid;	// Parent pid  
+};
+
+
+
+
+
