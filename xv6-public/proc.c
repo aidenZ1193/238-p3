@@ -566,7 +566,7 @@ backtrace()
   
   int counter = 0;  
 
-  while(parentp && eip != 0xffffffff && retaddr != 0xffffffff){
+  while(parentp && retaddr != 0xffffffff){
    
   // ebp = *(uint*)ebp;
    tf = parentp->tf;
