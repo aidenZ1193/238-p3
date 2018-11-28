@@ -549,11 +549,7 @@ backtrace()
   struct proc *parentp = curproc;
   // will be set to cur->parent in while loop
   //
-  while(parentp && eip != 0xffffffff){
-   
-   //cprintf("eip = %x\n", eip);
-
-   tf = parentp->tf;
+  tf = parentp->tf;
    uint eax = tf->eax;
    uint ebx = tf->ebx;
    uint ecx = tf->ecx;
@@ -564,37 +560,35 @@ backtrace()
    uint eflag = tf->eflags;
    uint old_ebp = ebp;
    ebp = *(uint*)ebp;
+  
+  cprintf("eax: 0x%x\nebx: 0x%x\necx: 0x%x\nedx: 0x%x\nedi: 0x%x\nesi: 0x%x\neip: 0x%x\nesp: 0x%x\neflag: 0x%x\nebp: 0x%x\n",\
+   eax,ebx,ecx,edx,edi,esi,eip,esp,eflag,old_ebp);
+  
+  int counter = 0;  
+
+  while(parentp && eip != 0xffffffff && retaddr != 0xffffffff){
    
+  // ebp = *(uint*)ebp;
+   tf = parentp->tf;
+   ebp = tf->ebp;
+   if(ebp == 0)
+    break;
+   ebp = *(uint*)ebp;
    retaddr = *(uint*)(ebp+4);
    
    //eip = (uint)backtrace;
 
-   // debug portiom
-  // cprintf("all regs set, ready to print\n");
-   cprintf("-----Current Stack-------\n");
-   cprintf("eax: 0x%x\nebx: 0x%x\necx: 0x%x\nedx: 0x%x\nedi: 0x%x\nesi: 0x%x\neip: 0x%x\nesp: 0x%x\neflag: 0x%x\nebp: 0x%x\n",\
-   eax,ebx,ecx,edx,edi,esi,eip,esp,eflag,old_ebp);
-   cprintf("return addr: %x\n", retaddr);
-   //cprintf("return addr: %x\n", *(ebp+4));
-   // get local wariables until reaches return addr
-   /*
-   uint local = *(uint*)(ebp+4);
-   uint local = ebp+4;
-   int counter = 0;
-   while(local != retaddr){i
-     local = *(uint*)(local+4);
-     cprintf("#%d: %x\n", counter,local);
-     counter++;
-     //cprintf("#0: %x\n#1:%x\n#2: %x\n#3: %x\n#4: %x\n",*(uint*)(old_ebp+8),*(uint*)(old_ebp+12), *(uint*)(old_ebp+16),*(uint*)(old_ebp+20), *(uint*)(old_ebp+24));
-   }
-   */
-   cprintf("#0: %x\n#1:%x\n#2: %x\n#3: %x\n#4: %x\n",*(uint*)(old_ebp+8),*(uint*)(old_ebp+12), *(uint*)(old_ebp+16),*(uint*)(old_ebp+20), *(uint*)(old_ebp+24));
+  // cprintf("eax: 0x%x\nebx: 0x%x\necx: 0x%x\nedx: 0x%x\nedi: 0x%x\nesi: 0x%x\neip: 0x%x\nesp: 0x%x\neflag: 0x%x\nebp: 0x%x\n",
+  // eax,ebx,ecx,edx,edi,esi,eip,esp,eflag,old_ebp);
+   cprintf("#%d: %x\n", counter, retaddr);
+   //cprintf("#0: %x\n#1:%x\n#2: %x\n#3: %x\n#4: %x\n",*(uint*)(old_ebp+8),*(uint*)(old_ebp+12), *(uint*)(old_ebp+16),*(uint*)(old_ebp+20), *(uint*)(old_ebp+24));
    // check if parent exists
    if(parentp->parent != 0)
      parentp = parentp->parent;
    else
      break;   
-   eip = parentp->tf->eip;
+  // eip = parentp->tf->eip;
+   counter ++;
 
    }
   return 0;
