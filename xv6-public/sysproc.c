@@ -96,7 +96,7 @@ sys_uptime(void)
 int
 sys_backtrace(void)
 {
-  struct proc* curproc = myproc();
+ // struct proc* curproc = myproc();
   //backtrace(p);
   //return 0;
   /*
@@ -121,6 +121,6 @@ sys_backtrace(void)
    cprintf("#0: %x\n#1:%x\n#2: %x\n#3: %x\n#4: %x\n",*(uint*)(old_ebp+8),*(uint*)(old_ebp+12), *(uint*)(old_ebp+16),*(uint*)(old_ebp+20), *(uint*)(old_ebp+24));
   }
   */
-  backtrace(curproc);
+  backtrace();
   return 0;
 }

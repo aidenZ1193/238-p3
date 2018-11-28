@@ -120,7 +120,7 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-int		backtrace(struct proc*);
+int		backtrace(void);
 
 
 // swtch.S
