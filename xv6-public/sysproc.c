@@ -26,6 +26,37 @@ sys_wait(void)
   return wait();
 }
 
+int 
+sys_thread_create(void)
+{
+  // retrive args 
+  // int thread_create(void(*fcn)(void*), void *arg, void*stack)
+  char* fcn;
+  char* arg;
+  char* stack;
+  
+  if(argptr(0, &fcn, 4)<0)
+    cprintf("Arg#1 function error.\n");
+  if(argptr(1, &arg, 4)<0)
+    cprintf("Arg#2 args error.\n");
+  if(argptr(2, &stack, 4)<0)
+    cprintf("Arg#3 stack error.\n");  
+
+  return thread_create(fcn, arg, stack);
+}
+
+int 
+sys_thread_join(void)
+{
+  return thread_join();
+}
+
+int
+sys_thread_exit(void){
+  return thread_exit();
+}
+
+
 int
 sys_kill(void)
 {
@@ -96,31 +127,6 @@ sys_uptime(void)
 int
 sys_backtrace(void)
 {
- // struct proc* curproc = myproc();
-  //backtrace(p);
-  //return 0;
-  /*
-  struct trapframe* tf = curproc->tf;
-  uint ebp = tf->ebp;
-  while(ebp){
-
-   uint eax = tf->eax;
-   uint ebx = tf->ebx;
-   uint ecx = tf->ecx;
-   uint edx = tf->edx;
-   uint edi = tf->edi;
-   uint esi = tf->esi;
-   uint eip = tf->eip;
-   uint esp = tf->esp;
-   uint eflag = tf->eflags;
-   uint old_ebp = ebp;
-   ebp = *(uint*)ebp;
-   cprintf("eax: %x\nebx: %x\necx: %x\nedx: %x\nedi:%x\nesi: %x\neip: %x\nesp: %x\neflag: %x\nebp: %x\n",\
-   eax,ebx,ecx,edx,edi,esi,eip,esp,eflag,old_ebp);
-   cprintf("return addr: %x\n", *(uint*)(old_ebp+4));
-   cprintf("#0: %x\n#1:%x\n#2: %x\n#3: %x\n#4: %x\n",*(uint*)(old_ebp+8),*(uint*)(old_ebp+12), *(uint*)(old_ebp+16),*(uint*)(old_ebp+20), *(uint*)(old_ebp+24));
-  }
-  */
   backtrace();
   return 0;
 }
@@ -173,16 +179,3 @@ sys_getprocinfo()
   //free(up);
   return 0;
 }
-/*
-int
-sys_getpids()
-{i
-  int[64] pids;
-  struct proc* p = ptable.proc;
-  for(int i = 0; i < NPROC && p<ptable.proc[NPROC]; i++){
-    pids[i] = proc->pid;
-    p++;
-  }
-  return pids;
-}
-*/

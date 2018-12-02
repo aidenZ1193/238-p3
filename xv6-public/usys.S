@@ -31,4 +31,10 @@ SYSCALL(sleep)
 SYSCALL(uptime)
 SYSCALL(backtrace)
 SYSCALL(getprocinfo)
+SYSCALL(thread_create)
+SYSCALL(thread_join)
+SYSCALL(thread_exit)
+
+
+
 //SYSCALL(getpids)

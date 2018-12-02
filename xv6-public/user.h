@@ -29,6 +29,9 @@ int sleep(int);
 int uptime(void);
 int backtrace(void);
 int getprocinfo(int, struct uproc*);
+int thread_create(void(*fcn)(void*), void *arg, void*stack);
+int thread_join(void);
+int thread_exit(void);
 //int getpids(void); 
 
 // ulib.c
