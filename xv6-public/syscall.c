@@ -108,7 +108,7 @@ extern int sys_getprocinfo(void);
 //extern int[] sys_getpids(void);
 extern int sys_thread_create(void);
 extern int sys_thread_join(void);
-extern int sys_thread_exit(woid);
+extern int sys_thread_exit(void);
 
 
 static int (*syscalls[])(void) = {

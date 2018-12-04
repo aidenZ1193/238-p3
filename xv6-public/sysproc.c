@@ -42,7 +42,7 @@ sys_thread_create(void)
   if(argptr(2, &stack, 4)<0)
     cprintf("Arg#3 stack error.\n");  
 
-  return thread_create(fcn, arg, stack);
+  return thread_create((void*)fcn, arg, stack);
 }
 
 int 

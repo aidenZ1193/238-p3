@@ -123,6 +123,9 @@ void            wakeup(void*);
 void            yield(void);
 int		backtrace(void);
 int 		getprocinfo(int, struct uproc*);
+int 		thread_create(void(*fcn)(void*), void *arg, void*stack);
+int		thread_join(void);
+int		thread_exit(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
