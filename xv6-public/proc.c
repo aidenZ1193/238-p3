@@ -231,26 +231,31 @@ thread_create(void(*fcn)(void*), void *arg, void*stack)
 {
   int i, pid;
   struct proc *np;
+ //:w
   struct proc *proc = myproc();
  // struct proc *curproc = myproc();
-  acquire(&ptable.lock);
+  // acquire(&ptable.lock);
+  cprintf("Acquire lock successed in thread_create\n");
   // Allocate process
   if((np = allocproc()) == 0){
+    release(&ptable.lock);
     return -1;
   }
-  
+ 
 // Copy process state from proc
 //if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz)) == 0){
   //  kfree(np->kstack);
    // np->kstack = 0;
    // np->state = UNUSED;
-   np->state = RUNNABLE; 
+   //np->state = RUNNABLE
   np->sz = proc->sz;
   np->parent = proc;
   *np->tf = *proc->tf;
-  
+  np->pgdir = proc->pgdir;
   // clear %eax
   np->tf->eax = 0;
+  
+  cprintf("Proc all set in thread_create\n");
 
   for(i = 0; i < NOFILE; i++)
     if(proc->ofile[i])
@@ -274,14 +279,17 @@ thread_create(void(*fcn)(void*), void *arg, void*stack)
   // set eip and esp
   np->tf->eip = (int)fcn;
   np->tf->esp = (int)esp;
- // np->state = RUNNABLE;
-
+  
+  acquire(&ptable.lock);
+ 
+  np->state = RUNNABLE;
+  
   release(&ptable.lock);
 
   return pid;
 
 }
-
+//
 
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
@@ -454,7 +462,7 @@ thread_join(void)
   // No point waiting if we don't have any children.
   if(!havekids || curproc->killed){
       // not sure if this is right: free pgdir if no more children
-      freevm(p->pgdir);
+     // freevm(p->pgdir);
       release(&ptable.lock);
       return -1;
     }
