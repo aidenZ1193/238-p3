@@ -235,7 +235,7 @@ thread_create(void(*fcn)(void*), void *arg, void*stack)
   struct proc *proc = myproc();
  // struct proc *curproc = myproc();
   // acquire(&ptable.lock);
-  cprintf("Acquire lock successed in thread_create\n");
+//  cprintf("Acquire lock successed in thread_create\n");
   // Allocate process
   if((np = allocproc()) == 0){
     release(&ptable.lock);
@@ -255,7 +255,7 @@ thread_create(void(*fcn)(void*), void *arg, void*stack)
   // clear %eax
   np->tf->eax = 0;
   
-  cprintf("Proc all set in thread_create\n");
+ // cprintf("Proc all set in thread_create\n");
 
   for(i = 0; i < NOFILE; i++)
     if(proc->ofile[i])

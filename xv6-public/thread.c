@@ -2,16 +2,19 @@
 #include "stat.h"
 #include "spinlock.h"
 #include "user.h"
+#include "param.h"
+#include "x86.h"
+//#include "defs.h"
+#include "mmu.h"
 #include "proc.h"
-
 
 // spinlock
 struct thread_spinlock {
   uint locked;       // Is the lock held?
 
   char *name;        // Name of lock.
-  struct cpu *cpu;   // The cpu holding the lock.
-  uint pcs[10];      // The call stack (an array of program counters)
+//  struct cpu *cpu;   // The cpu holding the lock.
+//  uint pcs[10];      // The call stack (an array of program counters)
                      // that locked the lock.
 };
 
@@ -20,11 +23,12 @@ struct thread_mutex{
   uint locked;       // Is the lock held?
 
   char *name;        // Name of lock.
-  struct cpu *cpu;   // The cpu holding the lock.
-  uint pcs[10];      // The call stack (an array of program counters)
+//  struct cpu *cpu;   // The cpu holding the lock.
+//  uint pcs[10];      // The call stack (an array of program counters)
                      // that locked the lock.
 };
 
+//struct cpu*     mycpu(void);
 void thread_spin_init(struct thread_spinlock *lk, char* name);
 void thread_spin_lock(struct thread_spinlock *lk);
 void thread_spin_unlock(struct thread_spinlock *lk);
@@ -38,7 +42,7 @@ void thread_spin_init(struct thread_spinlock *lk, char* name){
 
   lk->name = name;
   lk->locked = 0;
-  lk->cpu = 0;
+ // lk->cpu = 0;
 
 }
 
@@ -53,13 +57,13 @@ void thread_spin_lock(struct thread_spinlock *lk){
   __sync_synchronize();
 
   // Record info about lock acquisition for debugging.
-  //lk->cpu = cpu;
-  lk->*cpu = mycpu();
+ //lk->cpu = cpu;
+ // lk->cpu = mycpu();
 }
 
 void thread_spin_unlock(struct thread_spinlock *lk){
-  lk->pcs[0] = 0;
-  lk->cpu = 0;
+ // lk->pcs[0] = 0;
+ // lk->cpu = 0;
 
   // Tell the C compiler and the processor to not move loads or stores
   // past this point, to ensure that all the stores in the critical
@@ -74,8 +78,8 @@ void thread_spin_unlock(struct thread_spinlock *lk){
 void thread_mutex_init(struct thread_mutex *m, char* name){
 
   m->name = name;
-  m->locked = 0;
-  m->cpu = 0;
+ // m->locked = 0;
+ // m->cpu = 0;
 
 }
 
@@ -85,21 +89,22 @@ void thread_mutex_lock(struct thread_mutex *m){
     sleep(1);
 
   __sync_synchronize();
-  //lk->cpu = cpu;
-  m->*cpu = mycpu();
+  //m->cpu = cpu;
+ // m->cpu = mycpu();
 }
 void thread_mutex_unlock(struct thread_mutex *m){
-  m->pcs[0] = 0;
-  m->cpu = 0;
+  //m->pcs[0] = 0;
+  //m->cpu = 0;
   
   __sync_synchronize();
 
-  lk->locked = 0;
+  m->locked = 0;
 
 }
 
-struct thread_mutex lock;
+//struct thread_mutex lock;
 char* name = "thread_mnutex";
+struct thread_spinlock lk;
 
 struct balance {
     char name[32];
@@ -124,11 +129,13 @@ void do_work(void *arg){
     printf(1, "Starting do_work: s:%s\n", b->name);
 
     for (i = 0; i < b->amount; i++) { 
-	thread_mutex_lock(&lock);
-	old = total_balance;
+	//thread_mutex_lock(&lock);
+	thread_spin_lock(&lk);
+        old = total_balance;
         delay(100000);
         total_balance = old + 1;
-	thread_mutex_unlock(&lock);
+	//thread_mutex_unlock(&lock);
+	thread_spin_unlock(&lk);
     }
    printf(1, "Done s:%x\n", b->name);
 
@@ -143,8 +150,9 @@ int main(int argc, char *argv[]) {
   
   //struct thread_mutex *lock;
   //char* name = "thread_mnutex";
-  thread_mutex_init(lock, name);
- 
+  //thread_spinlock_init(&lock, name);
+  thread_spin_init(&lk, name); 
+
   void *s1, *s2;
   int t1, t2, r1, r2;
 
